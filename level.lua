@@ -75,4 +75,8 @@ function Level:getMap()
 	return self.map
 end
 
+function Level:collectTile(row, col)
+	self.map[row][col] = 0
+end
+
 return Level

@@ -21,7 +21,7 @@ function love.load()
 	local windowW = love.graphics.getWidth()
 	local windowH = love.graphics.getHeight()
 	scale = math.min(windowW / C.VIRTUAL_W, windowH / C.VIRTUAL_H)
-	churchy = Churchy.new(200, 100)
+	churchy = Churchy.new(200, C.VIRTUAL_H - (C.TILE_SIZE * 4))
 	level = Level.new()
 end
 
@@ -42,6 +42,9 @@ function love.draw()
 
 	love.graphics.pop()
 	--UI/MENU Draw:
+	local churchyCoords = "Churchy: (" .. math.floor(churchy.x) .. "," .. math.floor(churchy.y) .. ")"
+	love.graphics.print(churchyCoords, 100, 100)
+	love.graphics.print("Score: " .. GameState.score, 100, 150)
 
 	love.graphics.setCanvas()
 	local offsetX = (love.graphics.getWidth() - C.VIRTUAL_W * scale) / 2
