@@ -1,0 +1,9 @@
+local C = {}
+
+C.VIRTUAL_W = 1280
+C.VIRTUAL_H = 768
+C.TILE_SIZE = 32
+C.GRAVITY = 600
+C.JUMP_FORCE = -450
+
+return C
