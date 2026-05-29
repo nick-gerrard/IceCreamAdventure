@@ -60,6 +60,9 @@ function Utils.resolveYCollision(entity, level)
 	end
 end
 
+-- TODO: remove checkConsumables entirely once ice cream lives as entities.
+--       Collection becomes a simple AABB overlap check between churchy and each IceCream entity,
+--       resolved in the entity's own update() or in a shared overlap helper below.
 function Utils.checkConsumables(entity, level)
 	local map = level:getMap()
 	local collected = 0
@@ -85,5 +88,22 @@ function Utils.checkConsumables(entity, level)
 
 	return collected
 end
+
+-- TODO: add a general AABB overlap helper — used for churchy vs. entities (pickup, damage, win):
+-- function Utils.overlaps(a, b)
+--     return a.x < b.x + b.width  and
+--            a.x + a.width  > b.x and
+--            a.y < b.y + b.height and
+--            a.y + a.height > b.y
+-- end
+
+-- TODO: add Utils.filterAlive(entities) to prune entities with alive == false after each update:
+-- function Utils.filterAlive(entities)
+--     local alive = {}
+--     for _, e in ipairs(entities) do
+--         if e.alive ~= false then table.insert(alive, e) end
+--     end
+--     return alive
+-- end
 
 return Utils

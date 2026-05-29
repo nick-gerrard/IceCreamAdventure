@@ -34,15 +34,38 @@ local rawMap = {
 
 function Level.new()
 	local map = {}
+	-- TODO: add a separate spawns list — scan rawMap for non-geometry tiles (2, 3, couch marker)
+	--       record {type, x, y} for each, then write 0 into map[row][col] so the tile grid
+	--       only ever holds geometry (1 = solid, 0 = empty). Example:
+	-- local spawns = {}
 	for row, str in ipairs(rawMap) do
 		map[row] = {}
 		for col = 1, #str do
-			map[row][col] = tonumber(str:sub(col, col))
+			local tile = tonumber(str:sub(col, col))
+			-- TODO: replace this block with spawn extraction:
+			-- if tile == 2 then
+			--     table.insert(spawns, { type = "icecream", x = (col-1)*C.TILE_SIZE, y = (row-1)*C.TILE_SIZE })
+			--     tile = 0
+			-- elseif tile == 3 then
+			--     table.insert(spawns, { type = "roach", x = (col-1)*C.TILE_SIZE, y = (row-1)*C.TILE_SIZE })
+			--     tile = 0
+			-- end
+			map[row][col] = tile
 		end
 	end
 
+	-- TODO: also decide where the couch lives — either a special tile value in rawMap,
+	--       or a hardcoded spawn. Either way push it into spawns here.
+
+	-- TODO: store spawns on self so main.lua can call level:getSpawns()
 	return setmetatable({ map = map }, Level)
+	-- becomes: return setmetatable({ map = map, spawns = spawns }, Level)
 end
+
+-- TODO: add this method once spawns are stored on self:
+-- function Level:getSpawns()
+--     return self.spawns
+-- end
 
 function Level:reset()
 	for row, str in ipairs(rawMap) do
@@ -50,6 +73,8 @@ function Level:reset()
 			self.map[row][col] = tonumber(str:sub(col, col))
 		end
 	end
+	-- TODO: reset should re-scan spawns too and return them so main.lua can rebuild entities
+	--       (or call a shared private function that both new() and reset() use)
 end
 
 function Level:getTile(x, y)

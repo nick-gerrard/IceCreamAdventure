@@ -1,3 +1,48 @@
-local Enemy = {}
+-- TODO: this file can stay as a shared base or be deleted — each enemy type gets its own file.
+--       Suggested layout:
+--
+--   roach.lua  — walks a platform, turns at edges or walls, isEnemy = true
+--   bird.lua   — flies a horizontal patrol, skips gravity/ground collision, isEnemy = true
+--   mouse.lua  — walks like roach but accelerates toward churchy within a chase radius
+--
+--       Each enemy file follows the same shape:
+--
+-- local C       = require("constants")
+-- local Utils   = require("utils")
+--
+-- local Roach = {}
+-- Roach.__index = Roach
+--
+-- function Roach.new(x, y)
+--     return setmetatable({
+--         x = x, y = y,
+--         width = C.TILE_SIZE, height = C.TILE_SIZE,
+--         vx = 60, vy = 0,
+--         isEnemy = true,
+--         alive = true,
+--         image = love.graphics.newImage("assets/roach.png"),
+--     }, Roach)
+-- end
+--
+-- function Roach:update(dt, level, entities)
+--     self.x = self.x + self.vx * dt
+--     Utils.resolveXCollision(self, level)
+--     if self.vx ~= 0 and self.vxPrev == 0 then self.vx = -self.vx end  -- wall bounce
+--
+--     self.vy = self.vy + C.GRAVITY * dt
+--     self.y  = self.y  + self.vy  * dt
+--     Utils.resolveYCollision(self, level)
+--
+--     -- edge detection: if tile below leading foot is empty, turn around
+--     -- (check one tile ahead at foot level)
+-- end
+--
+-- function Roach:draw()
+--     love.graphics.setColor(1, 1, 1)
+--     love.graphics.draw(self.image, self.x, self.y)
+-- end
+--
+-- return Roach
 
+local Enemy = {}
 return Enemy
