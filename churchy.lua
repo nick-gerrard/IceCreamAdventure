@@ -18,6 +18,7 @@ function Churchy.new(x, y)
 		vy = 0,
 		speed = 220,
 		image = rightImage,
+		active = true,
 	}, Churchy)
 
 	self.runRightAnim = self:animateRun(love.graphics.newImage("assets/churchyrunright.png"), 32, 32, 0.2)
@@ -40,9 +41,7 @@ function Churchy:animateRun(image, width, height, duration)
 	return animation
 end
 
--- TODO: add `entities` as a third parameter once entity list exists in main.lua:
--- function Churchy:update(dt, level, entities)
-function Churchy:update(dt, level)
+function Churchy:update(dt, level, entities)
 	self.vx = 0
 	if love.keyboard.isDown("d") then
 		self.image = rightImage
@@ -67,36 +66,23 @@ function Churchy:update(dt, level)
 	self.vy = self.vy + C.GRAVITY * dt
 	self.y = self.y + self.vy * dt
 	Utils.resolveYCollision(self, level)
-	-- TODO: remove checkConsumables once ice cream are entities — collection handled by overlap:
-	-- for _, e in ipairs(entities) do
-	--     if e.type == "icecream" and e.alive and Utils.overlaps(self, e) then
-	--         e.alive = false
-	--         GameState.score = GameState.score + 1
-	--     end
-	-- end
-	GameState.score = GameState.score + Utils.checkConsumables(self, level)
 
-	-- TODO: enemy damage check — stomp vs. side hit:
-	-- for _, e in ipairs(entities) do
-	--     if e.isEnemy and e.alive and Utils.overlaps(self, e) then
-	--         local stomped = self.vy > 0 and self.y + self.height < e.y + e.height / 2
-	--         if stomped then
-	--             e.alive = false
-	--             self.vy = C.JUMP_FORCE / 2  -- bounce
-	--         else
-	--             self:reset()  -- or lose a life
-	--         end
-	--     end
-	-- end
-
-	-- TODO: win condition check — only if all ice cream collected:
-	-- for _, e in ipairs(entities) do
-	--     if e.type == "couch" and Utils.overlaps(self, e) then
-	--         if GameState.score >= GameState.totalIceCream then
-	--             GameState.won = true
-	--         end
-	--     end
-	-- end
+	for _, e in ipairs(entities) do
+		if e.type == "iceCream" and e.active and Utils.overlaps(self, e) then
+			e.active = false
+			GameState.score = GameState.score + 1
+		elseif e.isEnemy and e.active and Utils.overlaps(self, e) then
+			local stomped = self.vy > 0 and (self.y + self.height) < (e.y + e.height / 2)
+			if stomped then
+				e.active = false
+				self.vy = C.JUMP_FORCE / 2
+			else
+				self:reset()
+			end
+		elseif e.type == "couch" and Utils.overlaps(self, e) and GameState.score >= GameState.totalIceCream then
+			GameState.won = true
+		end
+	end
 
 	self:isDead()
 end

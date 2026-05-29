@@ -6,10 +6,6 @@ local function isSolid(tile)
 	return tile == 1
 end
 
-local function isConsumable(tile)
-	return tile == 2
-end
-
 local function makeTileQuery(map)
 	return function(x, y)
 		local col = math.floor(x / C.TILE_SIZE) + 1
@@ -60,50 +56,17 @@ function Utils.resolveYCollision(entity, level)
 	end
 end
 
--- TODO: remove checkConsumables entirely once ice cream lives as entities.
---       Collection becomes a simple AABB overlap check between churchy and each IceCream entity,
---       resolved in the entity's own update() or in a shared overlap helper below.
-function Utils.checkConsumables(entity, level)
-	local map = level:getMap()
-	local collected = 0
-	local seen = {}
-
-	local corners = {
-		{ entity.x,                    entity.y },
-		{ entity.x + entity.width - 1, entity.y },
-		{ entity.x,                    entity.y + entity.height - 1 },
-		{ entity.x + entity.width - 1, entity.y + entity.height - 1 },
-	}
-
-	for _, pt in ipairs(corners) do
-		local col = math.floor(pt[1] / C.TILE_SIZE) + 1
-		local row = math.floor(pt[2] / C.TILE_SIZE) + 1
-		local key = row .. "," .. col
-		if not seen[key] and map[row] and isConsumable(map[row][col]) then
-			level:collectTile(row, col)
-			collected = collected + 1
-			seen[key] = true
+function Utils.overlaps(a, b)
+	return a.x < b.x + b.width and a.x + a.width > b.x and a.y < b.y + b.height and a.y + a.height > b.y
+end
+function Utils.filterAlive(entities)
+	local alive = {}
+	for _, e in ipairs(entities) do
+		if e.active then
+			table.insert(alive, e)
 		end
 	end
-
-	return collected
+	return alive
 end
-
--- TODO: add a general AABB overlap helper — used for churchy vs. entities (pickup, damage, win):
--- function Utils.overlaps(a, b)
---     return a.x < b.x + b.width  and
---            a.x + a.width  > b.x and
---            a.y < b.y + b.height and
---            a.y + a.height > b.y
--- end
-
--- TODO: add Utils.filterAlive(entities) to prune entities with alive == false after each update:
--- function Utils.filterAlive(entities)
---     local alive = {}
---     for _, e in ipairs(entities) do
---         if e.alive ~= false then table.insert(alive, e) end
---     end
---     return alive
--- end
 
 return Utils

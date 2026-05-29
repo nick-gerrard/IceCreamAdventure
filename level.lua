@@ -4,8 +4,6 @@ local Level = {}
 Level.__index = Level
 local surfaceTexture = love.graphics.newImage("assets/surface1.png")
 local skyTexture = love.graphics.newImage("assets/sky.png")
-local iceCream = love.graphics.newImage("assets/icecream.png")
-local roach = love.graphics.newImage("assets/roach.png")
 local rawMap = {
 	"1000000000000000000000000000000000000000000000000220000000000000000000000000000000000000000000000000000000000000000000000000000000000000001",
 	"1000000000000000000000000000000000000000000000000000000000000000000000002200000000000000000000000000000000000000000000000000000000000000001",
@@ -27,54 +25,65 @@ local rawMap = {
 	"1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001",
 	"1000000000000000000000000011110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001",
 	"1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001",
-	"1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111111111100000000000000000000000000000001",
+	"1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111111111100000000000000000000004000000001",
 	"1000000000000000003000000000000000000000000003000000000000000000000000000000300000030000000000000000000000000003000000000000300000000000001",
 	"1111111111111111111111111100000001111111111111111111111111111000000001111111111111111111111111111111111111111111111111111111111111111111111",
 }
 
 function Level.new()
 	local map = {}
-	-- TODO: add a separate spawns list — scan rawMap for non-geometry tiles (2, 3, couch marker)
-	--       record {type, x, y} for each, then write 0 into map[row][col] so the tile grid
-	--       only ever holds geometry (1 = solid, 0 = empty). Example:
-	-- local spawns = {}
+	local spawns = {}
 	for row, str in ipairs(rawMap) do
 		map[row] = {}
 		for col = 1, #str do
 			local tile = tonumber(str:sub(col, col))
-			-- TODO: replace this block with spawn extraction:
-			-- if tile == 2 then
-			--     table.insert(spawns, { type = "icecream", x = (col-1)*C.TILE_SIZE, y = (row-1)*C.TILE_SIZE })
-			--     tile = 0
-			-- elseif tile == 3 then
-			--     table.insert(spawns, { type = "roach", x = (col-1)*C.TILE_SIZE, y = (row-1)*C.TILE_SIZE })
-			--     tile = 0
-			-- end
+			if tile == 2 then
+				table.insert(spawns, { type = "iceCream", x = (col - 1) * C.TILE_SIZE, y = (row - 1) * C.TILE_SIZE })
+				tile = 0
+			end
+			if tile == 3 then
+				table.insert(spawns, { type = "roach", x = (col - 1) * C.TILE_SIZE, y = (row - 1) * C.TILE_SIZE })
+				tile = 0
+			end
+			if tile == 4 then
+				table.insert(spawns, { type = "couch", x = (col - 1) * C.TILE_SIZE, y = (row - 1) * C.TILE_SIZE })
+				tile = 0
+			end
 			map[row][col] = tile
 		end
 	end
 
-	-- TODO: also decide where the couch lives — either a special tile value in rawMap,
-	--       or a hardcoded spawn. Either way push it into spawns here.
-
-	-- TODO: store spawns on self so main.lua can call level:getSpawns()
-	return setmetatable({ map = map }, Level)
-	-- becomes: return setmetatable({ map = map, spawns = spawns }, Level)
+	return setmetatable({ map = map, spawns = spawns }, Level)
 end
 
--- TODO: add this method once spawns are stored on self:
--- function Level:getSpawns()
---     return self.spawns
--- end
+--
+function Level:getSpawns()
+	return self.spawns
+end
 
 function Level:reset()
+	self.spawns = {}
 	for row, str in ipairs(rawMap) do
 		for col = 1, #str do
-			self.map[row][col] = tonumber(str:sub(col, col))
+			local tile = tonumber(str:sub(col, col))
+			if tile == 2 then
+				table.insert(
+					self.spawns,
+					{ type = "iceCream", x = (col - 1) * C.TILE_SIZE, y = (row - 1) * C.TILE_SIZE }
+				)
+				tile = 0
+			end
+			if tile == 3 then
+				table.insert(self.spawns, { type = "roach", x = (col - 1) * C.TILE_SIZE, y = (row - 1) * C.TILE_SIZE })
+				tile = 0
+			end
+			if tile == 4 then
+				table.insert(self.spawns, { type = "couch", x = (col - 1) * C.TILE_SIZE, y = (row - 1) * C.TILE_SIZE })
+				tile = 0
+			end
+			self.map[row][col] = tile
 		end
 	end
-	-- TODO: reset should re-scan spawns too and return them so main.lua can rebuild entities
-	--       (or call a shared private function that both new() and reset() use)
 end
 
 function Level:getTile(x, y)
@@ -90,15 +99,7 @@ function Level:draw()
 	for i = 1, #self.map do
 		for j = 1, #self.map[i] do
 			local x, y = (j - 1) * C.TILE_SIZE, (i - 1) * C.TILE_SIZE
-			if self.map[i][j] == 3 then
-				love.graphics.draw(skyTexture, x, y)
-				love.graphics.draw(roach, x, y)
-				love.graphics.setColor(1, 1, 1)
-			elseif self.map[i][j] == 2 then
-				love.graphics.draw(skyTexture, x, y)
-				love.graphics.draw(iceCream, x, y)
-				love.graphics.setColor(1, 1, 1)
-			elseif self.map[i][j] == 1 then
+			if self.map[i][j] == 1 then
 				love.graphics.draw(surfaceTexture, x, y)
 				love.graphics.setColor(1, 1, 1)
 			else
@@ -111,10 +112,6 @@ end
 
 function Level:getMap()
 	return self.map
-end
-
-function Level:collectTile(row, col)
-	self.map[row][col] = 0
 end
 
 return Level
