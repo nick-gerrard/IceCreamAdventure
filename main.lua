@@ -10,6 +10,7 @@ local canvas
 local churchy
 local camera_x = 0
 local level
+local couch = love.graphics.newImage("assets/inbetween.png")
 
 function love.resize(w, h)
 	scale = math.min(w / C.VIRTUAL_W, h / C.VIRTUAL_H)
@@ -39,6 +40,7 @@ function love.draw()
 	--Worldspace Draws:
 	level:draw()
 	churchy:draw()
+	love.graphics.draw(couch, C.VIRTUAL_W - 100, C.VIRTUAL_H - C.TILE_SIZE * 4)
 
 	love.graphics.pop()
 	--UI/MENU Draw:
