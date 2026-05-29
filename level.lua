@@ -2,7 +2,7 @@ local C = require("constants")
 
 local Level = {}
 Level.__index = Level
-local surfaceTexture = love.graphics.newImage("assets/surface.png")
+local surfaceTexture = love.graphics.newImage("assets/surface1.png")
 local skyTexture = love.graphics.newImage("assets/sky.png")
 local iceCream = love.graphics.newImage("assets/icecream.png")
 local roach = love.graphics.newImage("assets/roach.png")
@@ -42,6 +42,14 @@ function Level.new()
 	end
 
 	return setmetatable({ map = map }, Level)
+end
+
+function Level:reset()
+	for row, str in ipairs(rawMap) do
+		for col = 1, #str do
+			self.map[row][col] = tonumber(str:sub(col, col))
+		end
+	end
 end
 
 function Level:getTile(x, y)

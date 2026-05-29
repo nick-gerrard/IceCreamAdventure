@@ -77,9 +77,14 @@ function Churchy:jump()
 	end
 end
 
+function Churchy:reset()
+	self.x = 100
+	self.y = C.VIRTUAL_H - C.TILE_SIZE * 3
+end
+
 function Churchy:isDead()
 	if self.y > C.VIRTUAL_H then
-		self.y = C.VIRTUAL_H - C.TILE_SIZE * 4
+		self:reset()
 	end
 end
 
