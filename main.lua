@@ -52,4 +52,10 @@ function love.draw()
 	love.graphics.draw(canvas, offsetX, offsetY, 0, scale, scale)
 end
 
-function love.keypressed(key) end
+function love.keypressed(key)
+	if key == "r" then
+		level:reset()
+		churchy:reset()
+		GameState.score = 0
+	end
+end
