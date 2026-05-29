@@ -17,6 +17,17 @@ local function makeTileQuery(map)
 	end
 end
 
+local function getSubTile(map)
+	return function(x, y)
+		local col = math.floor(x / C.TILE_SIZE) + 1
+		local row = math.floor(y / C.TILE_SIZE)
+		if map[row] and map[row][col] then
+			return map[row][col]
+		end
+		return 0
+	end
+end
+
 function Utils.resolveXCollision(entity, level)
 	local getTile = makeTileQuery(level:getMap())
 
@@ -53,6 +64,13 @@ function Utils.resolveYCollision(entity, level)
 		entity.OnGround = true
 	else
 		entity.OnGround = false
+	end
+end
+
+function Utils.checkEndTile(entity, level)
+	local getTile = getSubTile(level:getMap())
+	if getTile == 0 then
+		entity.vx = -entity.vx
 	end
 end
 
