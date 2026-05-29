@@ -68,8 +68,9 @@ function Utils.resolveYCollision(entity, level)
 end
 
 function Utils.checkEndTile(entity, level)
-	local getTile = getSubTile(level:getMap())
-	if getTile == 0 then
+	local getTile = makeTileQuery(level:getMap())
+	local leadingX = entity.vx > 0 and (entity.x + entity.width) or entity.x
+	if not isSolid(getTile(leadingX, entity.y + entity.height + 1)) then
 		entity.vx = -entity.vx
 	end
 end

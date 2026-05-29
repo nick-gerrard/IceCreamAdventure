@@ -29,7 +29,9 @@ local function buildFromMapData(map, spawns)
 	if objectLayer then
 		for _, obj in ipairs(objectLayer.objects) do
 			local spawnType = obj.class or obj.type
-			table.insert(spawns, { type = spawnType, x = obj.x, y = obj.y })
+			local x = math.floor(obj.x / C.TILE_SIZE) * C.TILE_SIZE
+			local y = math.floor(obj.y / C.TILE_SIZE) * C.TILE_SIZE
+			table.insert(spawns, { type = spawnType, x = x, y = y })
 		end
 	end
 end
