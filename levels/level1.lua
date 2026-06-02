@@ -10,7 +10,7 @@ return {
   tilewidth = 32,
   tileheight = 32,
   nextlayerid = 3,
-  nextobjectid = 152,
+  nextobjectid = 154,
   properties = {},
   tilesets = {
     {
@@ -2219,6 +2219,26 @@ return {
           shape = "polygon",
           x = 4067,
           y = 706,
+          width = 32,
+          height = 32,
+          rotation = 0,
+          opacity = 1,
+          visible = true,
+          polygon = {
+            { x = 0, y = 0 },
+            { x = 32, y = 0 },
+            { x = 32, y = 32 },
+            { x = 0, y = 32 }
+          },
+          properties = {}
+        },
+        {
+          id = 153,
+          name = "",
+          type = "pigeon",
+          shape = "polygon",
+          x = 504.742,
+          y = 564.541,
           width = 32,
           height = 32,
           rotation = 0,

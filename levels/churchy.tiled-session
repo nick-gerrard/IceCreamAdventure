@@ -1,10 +1,26 @@
 {
-    "activeFile": "",
+    "activeFile": "level1.tmx",
     "expandedProjectPaths": [
+        "."
     ],
     "fileStates": {
+        "level1.tmx": {
+            "scale": 0.5061,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 5966.2122110254895,
+                "y": 433.7087532108279
+            }
+        },
+        "surface1.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "tiles.tsx": {
+            "scaleInDock": 1
+        }
     },
-    "last.exportedFilePath": "/home/nickg/Code/churchy/levels",
+    "last.exportedFilePath": "/Users/nickgerrard/Code/churchy/levels",
     "last.externalTilesetPath": "/home/nickg/Code/churchy/levels",
     "last.imagePath": "/home/nickg/Code/churchy/assets",
     "last.objectTemplatePath": "/home/nickg/Code/churchy/levels",
@@ -13,9 +29,13 @@
     "map.lastUsedFormat": "tmx",
     "map.width": 200,
     "openFiles": [
+        "level1.tmx",
+        "surface1.tsx"
     ],
     "project": "churchy.tiled-project",
     "recentFiles": [
+        "surface1.tsx",
+        "level1.tmx"
     ],
     "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
     "tileset.lastUsedFormat": "tsx"
